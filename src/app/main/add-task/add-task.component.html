@@ -1,0 +1,425 @@
+<link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli|Roboto:300,400,500,700|Google+Sans">
+
+<div class="page-layout blank p-24" fusePerfectScrollbar>
+
+    <div class="header mat-accent-bg p-16 p-sm-24" fxLayout="column" fxLayoutAlign="center center">
+        <h1>Neue Aufgabe</h1>
+    </div>
+
+    <br>
+
+    <div fxLayout="row">
+
+        <div fxFlex="10"></div>
+
+
+        <mat-vertical-stepper [linear]="false" fxFlex="80" class="mat-typography">
+
+
+                <mat-step [stepControl]="form">
+
+                    <form [formGroup]="form">
+
+                        <ng-template matStepLabel>Felder ausfüllen</ng-template>
+
+                        
+                        <div fxLayout="column">
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Bezeichnung" formControlName="name" required>
+                                <mat-error *ngIf="form.get('name').invalid">
+                                    Aufgabe muss eine Bezeichnung haben!
+                                </mat-error>
+                            </mat-form-field>
+
+                            
+                            <mat-form-field appearance="outline">
+                                <textarea  matInput placeholder="Beschreibung" formControlName="description"></textarea>
+                                <mat-error *ngIf="formErrors.description.required">
+                                    Beschreibung ist nicht optional
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+
+                                <mat-label>Priorität</mat-label>
+                                <mat-select placeholder="Priorität" formControlName="priority" required>
+                                    <mat-option value="keine">keine</mat-option>
+                                    <mat-option value="niedrig">niedrig</mat-option>
+                                    <mat-option value="normal">normal</mat-option>
+                                    <mat-option value="hoch">hoch</mat-option>
+                                    <mat-option value="kritisch">kritisch</mat-option>
+                                </mat-select>
+
+
+                                <mat-error *ngIf="form.get('priority').invalid">
+                                    Bitte Priorität auswählen!
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+
+                                <mat-label>Projekt</mat-label>
+                                <mat-select placeholder="Projekt" formControlName="project" required>
+                                    <mat-option value="alle">alle</mat-option>
+                                    <mat-option value="Projekt 1">Projekt 1</mat-option>
+                                    <mat-option value="Projekt 2">Projekt 2</mat-option>
+                                </mat-select>
+
+
+                                <mat-error *ngIf="form.get('project').invalid">
+                                    Bitte Projekt auswählen!
+                                </mat-error>
+                            </mat-form-field>
+
+                            <div fxLayout="row">
+                                <mat-form-field appearance="outline" fxFlex="49">
+                                    <!-- <input matInput placeholder="Startdatum" formControlName="startDate" required> -->
+                                    <input matInput [matDatepicker]="dp1" placeholder="Startdatum" formControlName="startDate">
+                                    <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp1></mat-datepicker>
+                                    
+                                    
+                                    
+                                    <mat-error *ngIf="form.get('startDate').invalid">
+                                        Startdatum muss angegeben werden!
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <div fxFlex="2"></div>
+
+
+                                <mat-form-field appearance="outline" fxFlex="49">
+                                    <input matInput [matDatepicker]="dp" placeholder="Deadline" formControlName="deadline">
+                                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp></mat-datepicker>
+              
+                                    <mat-error *ngIf="form.get('deadline').invalid">
+                                        Voraussichtliches Enddatum muss angegeben werden!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        
+
+                        <div class="pt-24" fxLayout="row" fxLayoutAlign="start start">
+                            <button class="mr-8" mat-raised-button type="button" color="accent">
+                                Abbrechen
+                            </button>
+                            <button mat-raised-button matStepperNext type="button" color="accent">
+                                Weiter
+                            </button>
+                        </div>
+
+                    </form>
+
+                </mat-step>
+
+                <mat-step>
+
+                    <!-- <form [formGroup]="verticalStepperStep2"> -->
+
+                        <ng-template matStepLabel>Freiwilligen hinzufügen</ng-template>
+
+                        <div>
+                            Einen oder mehrere Freiwillige hinzufügen (optional)
+                        </div>
+
+                        <br>
+
+                        <!-- <mat-accordion>
+                            <mat-expansion-panel [expanded]="true">
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Zuletzt verwendet
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    
+                                </mat-panel-description>
+                                </mat-expansion-panel-header> -->
+
+                                <mat-form-field appearance="outline" style="width: 300px">
+
+                                    <mat-label>Filter</mat-label>
+                                    <mat-select placeholder="Projekt" value="Zuletzt verwendet">
+                                        <mat-option value="Zuletzt verwendet">Zuletzt verwendet</mat-option>
+                                        <mat-option value="Favoriten">Favoriten</mat-option>
+                                        <mat-option value="Alle">Alle</mat-option>
+                                    </mat-select>
+
+                                </mat-form-field>
+
+                                <div fxLayout="row">
+                                    
+                                    <div fxFlex="10"></div>
+
+                                    <mat-table #table [dataSource]="dataSource" fxFlex="45">
+                                        <ng-container matColumnDef="image">
+                                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                            <mat-cell *matCellDef="let entry">
+                                                <img class="avatar" src="{{entry.image}}">
+                                            </mat-cell>
+                                        </ng-container>
+                            
+                                        <ng-container matColumnDef="name">
+                                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                            <mat-cell *matCellDef="let entry">{{entry.name}}</mat-cell>
+                                        </ng-container>
+            
+                                        <ng-container matColumnDef="actions">
+                                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                            <mat-cell *matCellDef="let taskTemplate">
+                                                <mat-checkbox></mat-checkbox>
+                                            </mat-cell>
+                                        </ng-container>
+                                    
+                                        <!-- <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row> -->
+                                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                                    </mat-table>
+
+                                    <div fxFlex="35"></div>
+
+
+                                </div>
+                            
+                            <!-- </mat-expansion-panel>
+                              
+                            <mat-expansion-panel [expanded]="false">
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Alle Freiwillige
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    
+                                </mat-panel-description>
+                                </mat-expansion-panel-header>
+                            
+                                content
+                                
+                            </mat-expansion-panel>
+                            
+                        </mat-accordion> -->
+                      
+
+                        
+
+                        <div class="pt-24" fxLayout="row" fxLayoutAlign="start start">
+                            <button class="mr-8" mat-raised-button type="button" color="accent">
+                                Abbrechen
+                            </button>
+                            <button class="mr-8" mat-raised-button matStepperPrevious type="button" color="accent">
+                                Zurück
+                            </button>
+                            <button mat-raised-button matStepperNext type="button" color="accent" (click)="resetAbleitungStates()">
+                                Weiter
+                            </button>
+                        </div>
+
+                    <!-- </form> -->
+
+                </mat-step>
+
+                <mat-step>
+
+                    <ng-template matStepLabel>Kompetenzen</ng-template>
+
+                    <div *ngIf="displayFirstCompetenceStep" fxLayout="column"  style="height: 200px">
+
+                        <div style="padding-bottom: 10px">
+                            Kompetenzen können aufgrund der eingegebenen Daten abgeleitet oder manuell festgelegt werden.
+                        </div>
+
+                        
+
+                        <div fxLayout="row">
+                           
+                            <mat-form-field fxFlex="47" appearance="outline"> 
+                                <input matInput placeholder="Suchen">
+                            </mat-form-field>
+                           
+
+                            <div fxFlex="6">
+                                <div style="display: flex; justify-content: center; align-items: center; padding-top: 24px">
+                                oder
+                                </div>
+                            </div>
+     
+                            <div fxFlex="47" style="padding-top: 5px">
+                                <button class="mr-8" mat-flat-button type="button" color="accent" style="width: 100%; height: 68%;" (click)="ableiten()" >
+                                    Ableiten
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div class="pt-24" fxLayout="row" fxLayoutAlign="start start">
+                            <button class="mr-8" mat-raised-button type="button" color="accent">
+                                Abbrechen
+                            </button>
+                            <button class="mr-8" mat-raised-button matStepperPrevious type="button" color="accent">
+                                Zurück
+                            </button>
+                            <button mat-raised-button matStepperNext type="button" color="accent" disabled>
+                                Weiter
+                            </button>
+                        </div>
+
+
+                        
+
+                    </div>
+
+                    <div *ngIf="displayAbleitungStep" style="height: 200px" fxLayout="column" fxLayoutAlign="space-between center">
+                        
+                        <div></div>
+                    
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+                            <div></div>
+
+                            <mat-spinner></mat-spinner>
+                            
+                            <div></div>
+
+                        </div>
+
+                        <div></div>
+
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+                            <div></div>
+                            <div>
+                                Ableitung erfolgt - kann etwas dauern
+                            </div> 
+                            <div></div>
+                        </div>
+
+                        <div></div>
+                    </div>
+
+                    <div *ngIf="displayAbleitungFinishedStep" style="height: auto">
+                        <div fxLayout="row" fxLayoutAlign="space-between center">
+                            <!-- <div></div> -->
+                            <div class="h2 m-16" fxLayout="row" fxLayoutAlign="start center">
+                                <mat-icon>check</mat-icon>    
+                                <div>&nbsp; &ndash; &nbsp;</div>
+                                <div>Kompetenzen wurden abgeleitet</div>
+                            
+                            </div>
+                            <!-- <div></div> -->
+                        </div>  
+
+                        
+
+                        <div fxLayout="row">
+
+                            <div fxFlex="5"></div>
+
+                            <div fxFlex="45">
+                                 <!-- fxLayout="row" fxFlex="70"> -->
+                                <!-- <div fxFlex ="5"></div> -->
+
+                                <!-- <mat-table #table2 [dataSource]="dataSourceCompetences" fxFlex="45"> -->
+
+                                <mat-table #table2 [dataSource]="dataSourceCompetences">
+
+                                    <ng-container matColumnDef="competenceName">
+                                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                        <mat-cell *matCellDef="let entry">
+                                            {{entry.competence}}
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="actions">
+                                        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                        <mat-cell *matCellDef="let entry">
+                                            <mat-checkbox checked=true></mat-checkbox>
+                                        </mat-cell>
+                                    </ng-container>
+                                
+                                    <!-- <mat-header-row *matHeaderRowDef="displayedColumnsCompetences"></mat-header-row> -->
+                                    <mat-row *matRowDef="let row; columns: displayedColumnsCompetences;"></mat-row>
+                                </mat-table>
+                                
+                                <!-- <div fxFlex="40"></div> -->
+
+                            </div>
+
+                            <div fxFlex="5"></div>
+
+                            <div fxFlex="40">
+                                <div>Weitere Suchen:</div>
+                                <br>
+                                <mat-form-field appearance="outline" style="width: 100%"> 
+                                    <input matInput placeholder="Suchen">
+                                </mat-form-field>
+                            </div>
+
+                            <div fxFlex="5"></div>
+  
+                        </div>
+
+                        <div class="pt-24" fxLayout="row" fxLayoutAlign="start start">
+                            <button class="mr-8" mat-raised-button type="button" color="accent"  (click)="resetAbleitungStates()">
+                                Abbrechen
+                            </button>
+                            <button class="mr-8" mat-raised-button matStepperPrevious type="button" color="accent">
+                                Zurück
+                            </button>
+                            <button mat-raised-button matStepperNext type="button" color="accent" >
+                                Weiter
+                            </button>
+                        </div>
+                        
+                    </div>
+                    
+                </mat-step>
+
+                <mat-step>
+
+                    <ng-template matStepLabel>Fertig</ng-template>
+
+                    <div *ngIf="!displayFinishedLoadingCircle" style="height: 200px" fxLayout="column" fxLayoutAlign="space-between none">
+
+                        <div class="h2 m-16" fxLayout="row" fxLayoutAlign="center center">
+                            Abgeschlossen &nbsp; &ndash; &nbsp; Aufgabe wird nach Klick auf Fertig erstellt.
+                        </div>
+
+                        <div class="pt-24" fxLayout="row" fxLayoutAlign="start start">
+                            <button class="mr-8" mat-raised-button type="button" color="accent">
+                                Abbrechen
+                            </button>
+                            <button class="mr-8" mat-raised-button matStepperPrevious type="button" color="accent">
+                                Zurück
+                            </button>
+                            <button mat-raised-button type="button" color="accent" (click)="finishVerticalStepper()">
+                                Fertig
+                            </button>
+                        </div>
+                    </div>
+
+                    <div *ngIf="displayFinishedLoadingCircle" style="height: 200px">
+
+                        <div fxLayout="column" fxLayoutAlign="space-between center">
+                            <div></div>
+
+                            <mat-spinner></mat-spinner>
+                            
+                            <div></div>
+
+                        </div>
+                            
+                    </div>
+
+
+                </mat-step>
+
+            </mat-vertical-stepper>
+
+            <div fxFlex="10"></div>
+        </div>
+
+
+
+
+
+
+</div>
