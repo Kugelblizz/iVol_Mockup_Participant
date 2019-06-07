@@ -23,6 +23,8 @@ import { TasksModule } from './main/tasks/tasks.module';
 import { AddTaskModule } from './main/add-task/add-task.module';
 import { TasksFinishedModule } from './main/tasks-finished/tasks-finished.module';
 import { VerifyCompetenceModule } from './main/verify-competence/verify-competence.module';
+import { FuseAchievementsModule } from './main/achievements/achievements.module';
+import { SyncCompetencesModule } from './main/sync-competences/sync-competences.module';
 
 const appRoutes: Routes = [
     {
@@ -65,6 +67,14 @@ const children: Routes = [
         path: 'verifycompetence',
         loadChildren: './main/verify-competence/verify-competence.module#VerifyCompetenceModule',
     },
+    {
+        path: 'achievements',
+        loadChildren: './main/achievements/achievements.module#FuseAchievementsModule'
+    },
+    {
+        path: 'synccompetences',
+        loadChildren: './main/sync-competences/sync-competences.module#SyncCompetencesModule'
+    }
 ];
 
 @NgModule({
@@ -104,6 +114,9 @@ const children: Routes = [
         AddTaskModule,
         TasksFinishedModule,
         VerifyCompetenceModule,
+        FuseAchievementsModule,
+        SyncCompetencesModule,
+
     ],
     bootstrap   : [
         AppComponent

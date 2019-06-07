@@ -1,0 +1,136 @@
+<link type="text/css" rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Muli|Roboto:300,400,500,700|Google+Sans">
+
+
+<div class="page-layout blank p-24" fusePerfectScrollbar>
+
+    <div class="header p-16 p-sm-24" fxLayout="row" fxLayoutAlign="space-between center">
+        <!-- <img class="header-icon" src="../../../assets/icons/achievements.svg"> -->
+        <mat-icon class="material-icons white_large">widgets</mat-icon>
+        <h1>Deine Kompetenzen</h1>
+        <div></div>
+    </div>
+
+    <br>
+
+    <div class="mat-card">
+
+        <div style="padding-top: 25px"></div>
+
+
+
+        <div fxLayout="row">
+
+            <div fxFlex="10"></div>
+
+            <mat-table #table [dataSource]="dataSource" fxFlex="80">
+                <ng-container matColumnDef="label">
+                    <mat-header-cell *matHeaderCellDef>Kompetenz</mat-header-cell>
+                    <mat-cell *matCellDef="let entry">
+                        {{entry.label}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="attainedDate">
+                    <mat-header-cell *matHeaderCellDef>Erhalten am</mat-header-cell>
+                    <mat-cell *matCellDef="let entry">{{entry.attainedDate}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="published">
+                    <mat-header-cell *matHeaderCellDef>Status Veröffentlichung</mat-header-cell>
+                    <mat-cell *matCellDef="let entry">
+                        <div *ngIf="entry.published == true" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-icon class="blue-fg mr-4">public</mat-icon>
+                            <div style="padding-right: 3px"></div>
+                            <div style="font-size: 12px">veröffentlicht </div>
+                        </div>
+                        <div *ngIf="entry.published == false" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-icon class="red-fg mr-4">not_interested</mat-icon>
+                            <div style="padding-right: 3px"></div>
+                            <div style="font-size: 12px">privat</div>
+                        </div>
+                        <div *ngIf="entry.published == undefined" fxLayout="row" fxLayoutAlign="start center">
+                            <!-- <mat-icon class="red-fg mr-4"></mat-icon> -->
+                            <mat-spinner  diameter="20"></mat-spinner>
+                            <div style="padding-right: 12px"></div>
+                            <div style="font-size: 12px">lade...</div>
+                        </div>
+
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="synchronized">
+                    <mat-header-cell *matHeaderCellDef>Status Synchronisierung</mat-header-cell>
+                    <mat-cell *matCellDef="let entry">
+                        <div *ngIf="entry.synchronized == true" fxLayout="row" fxLayoutAlign="start center">
+
+                            <mat-icon class="green-fg mr-4">check</mat-icon>
+                            <div style="padding-right: 3px"></div>
+                            <div style="font-size: 12px">synchonisiert</div>
+
+                        </div>
+                        <div *ngIf="entry.synchronized == false" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-icon class="red-fg mr-4">close</mat-icon>
+                            <div style="padding-right: 3px"></div>
+                            <div style="font-size: 12px">nicht synchonisiert</div>
+                        </div>
+
+                        <div *ngIf="entry.synchronized == undefined" fxLayout="row" fxLayoutAlign="start center">
+                            <!-- <mat-icon class="red-fg mr-4"></mat-icon> -->
+                            <mat-spinner  diameter="20"></mat-spinner>
+                            <div style="padding-right: 12px"></div>
+                            <div style="font-size: 12px">lade...</div>
+                        </div>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let entry" fxLayout="row" fxLayoutAlign="start center">
+                        <button mat-stroked-button color="accent"
+                            style="width: 120px; height: 25px; line-height: 0; font-size: 12px" *ngIf="entry.published == true"
+                            (click)="setPublishedToUnpublished(entry)">
+                            Privat schalten </button>
+                        <button mat-stroked-button color="accent"
+                            style="width: 120px; height: 25px; line-height: 0; font-size: 12px" *ngIf="entry.published == false"
+                            (click)="setUnpublishedToPublished(entry)">
+                            Veröffentlichen </button>
+                        <button mat-stroked-button color="accent"
+                            style="width: 120px; height: 25px; line-height: 0; font-size: 12px" *ngIf="entry.published == undefined">
+                            <div style="padding-left: 35px">
+                                <mat-spinner color="accent" diameter="20"></mat-spinner>
+                            </div>
+                        </button>
+
+                        <div style="padding-left: 5px"></div>
+                        <button mat-stroked-button color="accent"
+                            style="width: 120px; height: 25px; line-height: 0; font-size: 12px"
+                            *ngIf="entry.synchronized == true"
+                            (click)="setSynchronizedToUnsynchronized(entry)"> Desychronisieren </button>
+                        <button mat-stroked-button color="accent"
+                            style="width: 120px; height: 25px; line-height: 0; font-size: 12px"
+                            *ngIf="entry.synchronized == false"
+                            (click)="setUnsynchronizedToSynchronized(entry)"> Synchronisieren </button>
+                        <button mat-stroked-button color="accent"
+                            style="width: 120px; height: 25px; line-height: 0; font-size: 12px" *ngIf="entry.synchronized == undefined">
+                            <div style="padding-left: 35px">
+                                <mat-spinner color="accent" diameter="20"></mat-spinner>
+                            </div>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+
+            <div fxFlex="10"></div>
+        </div>
+
+
+        <div style="padding-bottom: 50px"></div>
+
+
+    </div>
+
+</div>

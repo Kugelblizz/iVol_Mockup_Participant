@@ -16,15 +16,14 @@ $custom-typography: mat-typography-config(
         flex: 1 0 auto;
         height: 90px;
         max-height: 90px;
-        background: #1A237E;
-        background: linear-gradient(to right, #0E2A3B 0%, #34306B 100%);
+        background: #FF9326;
+        // background: linear-gradient(to right, #0E2A3B 0%, #34306B 100%);
         text-align: center;
 
         @include media-breakpoint('xs') {
             height: 240px;
             padding: 16px;
         }
-
 
         h1 {
             color: white;
@@ -42,34 +41,64 @@ $custom-typography: mat-typography-config(
     }
 
     .mat-column-actions {
-        flex: 0 0 55px;
+        flex: 0 0 300px;
     }
 
     .mat-column-image {
         flex: 0 0 100px;
     }
 
-    .mat-column-verifiedStatus {
-        flex: 0 0 100px;
+    .mat-column-name {
+        font-size: 20px;
     }
-
-
 
 
 }
 
+img.header-icon {
+    left: 10px;
+    padding: 16px;
+    max-height: 100%;
+    position: absolute;
+    //   filter: brightness(0) invert(1);
+    
 
-    img.header-icon {
-      left: 10px;
-      padding: 16px;
-      max-height: 100%;
-      position: absolute;
-      filter: brightness(0) invert(1);
 
-      @include media-breakpoint-down('xs') {
-        display: none;
-      }
+    @include media-breakpoint-down('xs') {
+    display: none;
     }
+}
+
+.material-icons.white_large { 
+    color: #FFFFFF; 
+    transform: scale(2.5);
+    padding-left: 5px;
+}
+
+.mat-spinner-color::ng-deep circle{
+    stroke: #FFFFFF !important;
+}
+
+.mat-button-invblue {
+    background-color: #FFFFFF !important;
+    border-color: blue !important;
+    color: blue !important;
+}
+
+// @import '~@angular/material/theming';
+// @include mat-core();
+
+// $my-app-primary:  mat-palette($mat-indigo, 900);
+// $my-app-accent: mat-palette($mat-indigo, 50);
+
+// $my-app-warn:    mat-palette($mat-white);
+
+// $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+
+// @include angular-material-theme($my-app-theme);
+
+
+
 
 //     .buttons {
 //       right: 0;
